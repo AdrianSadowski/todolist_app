@@ -1,0 +1,13 @@
+{
+  "name": "todolist_app",
+  "version": "1.0.0",
+  "main": "server.js",
+  "author": "Adrian Sadowski",
+  "license": "MIT",
+  "scripts": {
+    "start": "npx nodemon server.js"
+  },
+  "dependencies": {
+    "express": "^4.17.2"
+  }
+}
