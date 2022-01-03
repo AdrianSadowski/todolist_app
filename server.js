@@ -1,10 +1,23 @@
 const express = require('express');
-const { use } = require('../server_api/routes/testimonials.routes');
+const path = require('path');
 const app = express();
-
-app.listen(8000, () => {
-  console.log('Server is running on Port:', 8000)
+const socket = require('socket.io');
+const server = app.listen(process.env.PORT || 8000, () => {
+  console.log('Server is running');
 });
+const io = socket(server);
+
+const tasks = [];
+
+app.get('*', (req, res) => {
+  res.send('Not found ...');
+});
+
+io.on('connection', (socket) => {
+  console.log('a user connected');
+});
+
+
 
 app.use((req, res) => {
   res.status(404).send({ message: 'Error 404. Not found .....' })
