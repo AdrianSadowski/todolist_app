@@ -17,8 +17,6 @@ io.on('connection', (socket) => {
   console.log('a user connected');
 });
 
-
-
 app.use((req, res) => {
   res.status(404).send({ message: 'Error 404. Not found .....' })
 });
