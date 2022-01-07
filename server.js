@@ -1,22 +1,36 @@
-const express = require('express');
-const path = require('path');
+const express = require("express");
 const app = express();
-const socket = require('socket.io');
+const socket = require("socket.io");
 const server = app.listen(process.env.PORT || 8000, () => {
-  console.log('Server is running');
+  console.log("Server is running");
 });
-const io = socket(server);
 
 const tasks = [];
 
-app.get('*', (req, res) => {
-  res.send('Not found ...');
+app.get("*", (req, res) => {
+  res.send("Not found ...");
 });
 
-io.on('connection', (socket) => {
-  console.log('a user connected');
-});
+const io = socket(server);
+io.on("connection", (socket) => {
+  //console.log('a user connected ' + socket.id);
+  socket.emit("updateData", tasks);
+  socket.on("addTask", (task) => {
+    console.log(`User ${socket.id} adds ${task.name} taskId: ${task.id}`);
+    tasks.push(task);
+    socket.broadcast.emit("addTask", task);
+  });
 
-app.use((req, res) => {
-  res.status(404).send({ message: 'Error 404. Not found .....' })
+  socket.on("removeTask", (id) => {
+    console.log(`User ${socket.id} removes task ${id}`);
+    tasks.splice(
+      tasks.findIndex((task) => task.id === id),
+      1
+    );
+    socket.broadcast.emit("removeTask", id);
+  });
+
+  socket.on("disconnect", () => {
+    //console.log('Socket ' + socket.id +' left');
+  });
 });
